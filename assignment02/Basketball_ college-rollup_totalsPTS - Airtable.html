@@ -1,0 +1,527 @@
+<!DOCTYPE html><html>
+<head>
+<meta charSet="utf-8"/><meta name="theme-color" content="#ffffff"/><link nonce="d223acSC8ZBu" rel="stylesheet" type="text/css" href="/css/compiled/all.css?v=2592b2c3f319a4a2-7" /><script nonce="d223acSC8ZBu">
+            var _rollbarConfig = (function() {
+                
+        var regularExpressionsToFilterRollbarStackTraces = [/adroll\.com/,/intercomcdn\.com/,/intercom\.io/,/cdn\.segment\.com/];
+        var rollbarCheckIgnoreFunctionToFilterUnwantedClientSideExceptions = function rollbarCheckIgnoreFunctionToFilterUnwantedClientSideExceptions(
+isUncaught,
+args,
+payload)
+{
+  var frames =
+  payload &&
+  payload.data &&
+  payload.data.body &&
+  payload.data.body.trace &&
+  payload.data.body.trace.frames;
+  if (frames) {
+    var badFrames = false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    frames.forEach(function (frame) {
+      if (badFrames) {
+        return;
+      }
+      if (frame && frame.filename) {
+        regularExpressionsToFilterRollbarStackTraces.forEach(function (regExp) {
+          if (badFrames) {
+            return;
+          }
+          if (regExp.test(frame.filename)) {
+            badFrames = true;
+          }
+        });
+      }
+    });
+    if (badFrames) {
+      return true;
+    }
+    if (frames.length === 1 && frames[0].filename === '(unknown)') {
+      var exception = payload.data.body.trace.exception;
+      var messagesToIgnore = [
+      'Script error.',
+      "undefined is not an object (evaluating 'window.__pad.performLoop')"];
+
+      if (exception && messagesToIgnore.indexOf(exception.message) > 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+        var sanitizeUrl = function sanitizeUrl(url) {
+  if (url.match(/shr(\w{14})/)) {
+    var replacedUrl = url.replace(/shr\w{14}/g, function (match) {
+      return match.slice(0, 7) + '**********';
+    });
+    url = replacedUrl;
+  }
+  if (url.match(/auth\/passwordReset/)) {
+    url = url.replace(/(auth\/passwordReset\/)(.*)$/, '$1*');
+  }
+  url = url.replace(/(\?.*)$/, function (queryString) {
+    return sanitizeQueryStringByReplacingQueryValuesWithStar(queryString);
+  });
+  return url;
+};
+        var sanitizeQueryStringByReplacingQueryValuesWithStar = function sanitizeQueryStringByReplacingQueryValuesWithStar(queryString) {
+  var sanitizedQueryString = queryString.
+  replace(/(=)([^&]+)(&)/g, '$1*$3').
+  replace(/(=)([^&]+)$/, '$1*');
+  return sanitizedQueryString;
+};
+        var rollbarTransformFunctionToRemoveSensitiveDataFromReportedClientSideExceptions = function _rollbarTransformFunctionToRemoveSensitiveDataFromReportedClientSideExceptions(
+payload)
+{
+  if (payload.data && payload.data.request) {
+    if (payload.data.request.url) {
+      payload.data.request.url = sanitizeUrl(payload.data.request.url);
+    }
+    if (payload.data.request.query_string) {
+      payload.data.request.query_string = sanitizeQueryStringByReplacingQueryValuesWithStar(
+      payload.data.request.query_string);
+
+    }
+  }
+};
+    
+
+                var rollbarConfig = {"rollbarJsUrl":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Frollbar.js\u002F1.9.0\u002Frollbar.nojson.min.js","accessToken":"5a2d5967127341068ca03d066e325b6a","captureUncaught":true,"captureUnhandledRejections":false,"uncaughtErrorLevel":"error","maxItems":1000,"itemsPerMinute":60,"payload":{"environment":"production","person":{"id":"usrUWb9ppRpzxeXdT"},"client":{"javascript":{"source_map_enabled":true,"code_version":"2592b2c3f319a4a22f11007de11972ab31b4027a","guess_uncaught_frames":true}}}};
+                rollbarConfig.checkIgnore = rollbarCheckIgnoreFunctionToFilterUnwantedClientSideExceptions;
+                rollbarConfig.transform = rollbarTransformFunctionToRemoveSensitiveDataFromReportedClientSideExceptions;
+                return rollbarConfig;
+            })();
+
+            !function(r){function e(t){if(o[t])return o[t].exports;var n=o[t]={exports:{},id:t,loaded:!1};return r[t].call(n.exports,n,n.exports,e),n.loaded=!0,n.exports}var o={};return e.m=r,e.c=o,e.p="",e(0)}([function(r,e,o){"use strict";var t=o(1).Rollbar,n=o(2);_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||"https://d37gvrvc0wt4s1.cloudfront.net/js/v1.9/rollbar.min.js";var a=t.init(window,_rollbarConfig),i=n(a,_rollbarConfig);a.loadFull(window,document,!_rollbarConfig.async,_rollbarConfig,i)},function(r,e){"use strict";function o(r){return function(){try{return r.apply(this,arguments)}catch(e){try{console.error("[Rollbar]: Internal error",e)}catch(o){}}}}function t(r,e,o){window._rollbarWrappedError&&(o[4]||(o[4]=window._rollbarWrappedError),o[5]||(o[5]=window._rollbarWrappedError._rollbarContext),window._rollbarWrappedError=null),r.uncaughtError.apply(r,o),e&&e.apply(window,o)}function n(r){var e=function(){var e=Array.prototype.slice.call(arguments,0);t(r,r._rollbarOldOnError,e)};return e.belongsToShim=!0,e}function a(r){this.shimId=++c,this.notifier=null,this.parentShim=r,this._rollbarOldOnError=null}function i(r){var e=a;return o(function(){if(this.notifier)return this.notifier[r].apply(this.notifier,arguments);var o=this,t="scope"===r;t&&(o=new e(this));var n=Array.prototype.slice.call(arguments,0),a={shim:o,method:r,args:n,ts:new Date};return window._rollbarShimQueue.push(a),t?o:void 0})}function l(r,e){if(e.hasOwnProperty&&e.hasOwnProperty("addEventListener")){var o=e.addEventListener;e.addEventListener=function(e,t,n){o.call(this,e,r.wrap(t),n)};var t=e.removeEventListener;e.removeEventListener=function(r,e,o){t.call(this,r,e&&e._wrapped?e._wrapped:e,o)}}}var c=0;a.init=function(r,e){var t=e.globalAlias||"Rollbar";if("object"==typeof r[t])return r[t];r._rollbarShimQueue=[],r._rollbarWrappedError=null,e=e||{};var i=new a;return o(function(){if(i.configure(e),e.captureUncaught){i._rollbarOldOnError=r.onerror,r.onerror=n(i);var o,a,c="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(o=0;o<c.length;++o)a=c[o],r[a]&&r[a].prototype&&l(i,r[a].prototype)}return e.captureUnhandledRejections&&(i._unhandledRejectionHandler=function(r){var e=r.reason,o=r.promise,t=r.detail;!e&&t&&(e=t.reason,o=t.promise),i.unhandledRejection(e,o)},r.addEventListener("unhandledrejection",i._unhandledRejectionHandler)),r[t]=i,i})()},a.prototype.loadFull=function(r,e,t,n,a){var i=function(){var e;if(void 0===r._rollbarPayloadQueue){var o,t,n,i;for(e=new Error("rollbar.js did not load");o=r._rollbarShimQueue.shift();)for(n=o.args,i=0;i<n.length;++i)if(t=n[i],"function"==typeof t){t(e);break}}"function"==typeof a&&a(e)},l=!1,
+                c=e.createElement("script"),d=e.getElementsByTagName("script")[0],p=d.parentNode;
+                c.nonce='d223acSC8ZBu',c.crossOrigin="",c.src=n.rollbarJsUrl,c.async=!t,
+                c.onload=c.onreadystatechange=o(function(){if(!(l||this.readyState&&"loaded"!==this.readyState&&"complete"!==this.readyState)){c.onload=c.onreadystatechange=null;try{p.removeChild(c)}catch(r){}l=!0,i()}}),p.insertBefore(c,d)},a.prototype.wrap=function(r,e){try{var o;if(o="function"==typeof e?e:function(){return e||{}},"function"!=typeof r)return r;if(r._isWrap)return r;if(!r._wrapped){r._wrapped=function(){try{return r.apply(this,arguments)}catch(e){throw e._rollbarContext=o()||{},e._rollbarContext._wrappedSource=r.toString(),window._rollbarWrappedError=e,e}},r._wrapped._isWrap=!0;for(var t in r)r.hasOwnProperty(t)&&(r._wrapped[t]=r[t])}return r._wrapped}catch(n){return r}};for(var d="log,debug,info,warn,warning,error,critical,global,configure,scope,uncaughtError,unhandledRejection".split(","),p=0;p<d.length;++p)a.prototype[d[p]]=i(d[p]);r.exports={Rollbar:a,_rollbarWindowOnError:t}},function(r,e){"use strict";r.exports=function(r,e){return function(o){if(!o&&!window._rollbarInitialized){var t=window.RollbarNotifier,n=e||{},a=n.globalAlias||"Rollbar",i=window.Rollbar.init(n,r);i._processShimQueue(window._rollbarShimQueue||[]),window[a]=i,window._rollbarInitialized=!0,t.processPayloads()}}}}]);
+        </script><link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/baymax/apple-touch-icon.png" />
+<link rel="manifest" href="/images/favicon/baymax/manifest.json" />
+<link rel="mask-icon" href="/images/favicon/baymax/safari-pinned-tab.svg" color="#e82453" /><link id="favIconCanvas" rel="icon" type="image/x-icon"><title>Airtable</title><script nonce="d223acSC8ZBu">
+(function() {
+if (window.fetch) {
+var headers = {"x-user-locale":"zh-CN","x-airtable-application-id":"appdW4MAygzoW2ARe","x-airtable-page-load-id":"pglZBg0rLwOGO2PKl","X-Requested-With":"XMLHttpRequest","x-airtable-inter-service-client":"webClient","ot-tracer-spanid":"7dfe269e46a07002","ot-tracer-traceid":"1849f9cf4b3fff30","ot-tracer-sampled":"true"};
+headers['x-time-zone'] = Intl.DateTimeFormat() ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC';
+var timeoutPromise = new Promise(function(resolve, reject) {
+setTimeout(
+function() { reject('timeout'); },
+30000);
+});
+window.__stashedPrefetch = {
+metadata: {"method":"get","url":"\u002Fv0.3\u002Fapplication\u002FappdW4MAygzoW2ARe\u002Fread","objectParams":{"includeDataForTableIds":["tbltWqD3Lx1YEpr9o"],"includeDataForViewIds":["viwsH5r6VRruep5wm"],"shouldIncludeSchemaChecksum":false}},
+earlyPrefetchSpan: {"ot-tracer-spanid":"7dfe269e46a07002","ot-tracer-traceid":"1849f9cf4b3fff30","ot-tracer-sampled":"true"},
+fetchStartTimeMs: Date.now(),
+requestId: "reqi8GzGZZTEm7H2G",
+timeoutPromise: timeoutPromise,
+promise: Promise.race([
+timeoutPromise,
+fetch("\u002Fv0.3\u002Fapplication\u002FappdW4MAygzoW2ARe\u002Fread?stringifiedObjectParams=%7B%22includeDataForTableIds%22%3A%5B%22tbltWqD3Lx1YEpr9o%22%5D%2C%22includeDataForViewIds%22%3A%5B%22viwsH5r6VRruep5wm%22%5D%2C%22shouldIncludeSchemaChecksum%22%3Afalse%7D&requestId=reqi8GzGZZTEm7H2G&secretSocketId=socDx2Z6binZvCX4U", {
+method: "get",
+headers: headers,
+body: null}),
+])
+}
+setTimeout(function() {
+if (window.__stashedPrefetch) {
+if (window.__stashedPrefetch.onTimeout) {
+window.__stashedPrefetch.onTimeout();
+}
+window.__stashedPrefetch = null;
+}
+}, 60000);
+}
+})();
+</script>
+<script nonce="d223acSC8ZBu">performance.mark && performance.mark('initDataLoad:start')</script>
+<script nonce="d223acSC8ZBu">
+window.initData = {"baseUrl":"https:\u002F\u002Fairtable.com","publicJsPath":"https:\u002F\u002Fstatic.airtable.com\u002Fjs\u002Fby_sha\u002F2592b2c3\u002F","sameOriginPublicJsPath":"https:\u002F\u002Fairtable.com\u002Fjs\u002Fcompiled\u002F","csrfToken":"xYXly8hq-rlYIT_v0TQ_RnCnQAVgUC5v6c3I","enabledFeatureNames":["internationalFlatDiscountSeptember2020Rollout","careersJobScamBanner","tosAndPrivacyUpdate20200928","isSignUpPageWithPrioritizedGoogleButton","blocks.script.restrictEditing","crossBaseSyncPricingPage","workflowsFacebookPagesCreatePost","externalAccountsTwitter","externalAccountsFacebookPages","platformLaunchV1","marketingMobileMenuReactRouterFix","platformLaunchV1About","platformLaunchV1Onboarding","platformLaunchV1ProductNav","platformLaunchV1Product","platformLaunchV1HomeHeaderV2","platformLaunchV1HomeFloatingCta","platformLaunchV1HomeTestimonials","platformLaunchV1HomeTemplates","platformLaunchV1HomeIntegrations","platformLaunchV1Home","thirdPartyBlocksEnterpriseRestriction","platformContestAppsLaunchV1","blocks.appsRename","hideSmallBlockIcons","workflowsSendToSlackBotCustomizationInputs","blocksGalleryRefresh","publicBlocksGallery","highPromotionExperiment","onboardingPlanExplanation","adminPanelIntegrationRestrictionSettings","workflowsGoogleFormsNewResponseTrigger","workflowsGoogleCalendarEventTrigger","workflowsGoogleSheetsRowCreatedTrigger","collaboratorUpdatesSurveyRollout","workflowsRecordMatchesConditionsTrigger","blockThirdPartySubmission","workflowsExpressionBuilder","blocks.map.randomWaitBeforeGeocoding","workflowsRecordUpdatedTrigger","workflowsAttachments","externalAccountsAtlassianJira","selectFieldColorLegend","workflowsTwitterPostTweet","workflowsAtlassianJiraCreateIssue","educationPlan","smbFlatDiscountAugust2020Rollout","viewSidebarV2","persistentHelpButtonExperimentOverride","viewSwitcherAsSidebar","dubiousTextFieldAll","selectMoleculeInGroupConfigExperimentApplyToOnlyNewUsers","blocks.mapsLocationUpdateDebounce","onboardingSchedulingOverride","onboardingScheduling","workflowsProRollout","workflowsGoogleSheetsCreateRow","workflowsGoogleFormsCreateResponse","workflowsGoogleCalendarCreateEvent","workflowsGmailSendEmail","externalAccountsGoogleSheets","externalAccountsGoogleForms","externalAccountsGoogleCalendar","externalAccountsGmail","crossBaseSync","workflowsTrash","showNewOnboardingQuestionnaireV2","workflowsDuplicate","videoAttachmentPreviews","starterPlan","editableSharedViewsInlineEditing","workflowsEnterpriseRollout","blocks.sdkMinimumVersionEnforcement","createLookupsFromColumnMenu","addRowButtonForComputedGroups","workflowsRecordCreatedTrigger","collapseRevisionHistoryInDetailViewExperimentOverride","creatorPlanExperiment","blocks.pexelsButtonAction","blocks.formstackButtonAction","workflowsSendToMSTeamsAction","workflowsSendToSlackAction","externalAccounts","workflowsCustomScriptAction","blocks.customBlockButtonAction","emptyGroupsToggle","createViewBoxesControl","blocks.urlPreviewButtonAction","multiActionWorkflows","workflowsUpdateRecordAction","workflowsCreateRecordAction","sendEmailActionAdvancedInputs","blocks.scriptingButtonAction","blocks.sendgridButtonAction","blocks.pageDesignerButtonAction","buttonFieldOpenBlock","collaboratorAttributionFields","showNewOnboardingQuestionnaireRollout","showHomescreenImportBannerRollout","blockDeveloperToolsOpenRecord","lookupMolecule","buttonField","richTextLinkShortcuts","workflows","conditionalFormFields","conditionalRelationalColumns","updateEmailInAdminPanel","importLandingDialogExperiment","csvImportSize5MB","undoSnackbar","viewDescriptions","blockDescriptions","blocks.script.trackRestrictedGlobalAccess","offerCovid19DowngradeCredits","multiShare","scriptingBlockDocs","enableBlockInstallationStats","showDiscountPromoExperimentRollout","billingDowngradeFormRequiredExperimentVariant","billingDowngradeFormRequiredExperimentRollout","blockDocs","blockInstallVerbExperiment","blockInstallationHostMethodCallTracker","foreignKeyNonreversed","attachmentsNonreversed","jiraBlock","richTextAirtableFlavoredMarkdown","reactDatepickerDebounce","nonApplicationTrash","cspBlockFrameReportOnly","pageLoadEarlyPrefetch","reactDatePicker","enableBlockInstallationEventTracker","googleAnalyticsSegmentTracking","apiBatchDocs","webClipperBlock","percentFieldV2","onboardingMainGoalQuestion","clientSideEventTracker","richTextField","adRollTryTracking","twitterPixelTracking","analyticsIframeTracking","blocksUndo","onboardingV2","qualityOfServiceBeta","newAttachmentProcessor","hideInviteMessage","extraDocumentPreviews","disableBranchIos","accountRefresh","realtimeCompression","apiCellFormatString","publish","iosFreezeNotificationsForPushRoutes","newBillingOnUpgrade","disableRollbarCaptureUnhandledRejections","workspaceOverPlanLimits","immediatelyChargeOnUpgrade","highTouchProactiveChat","persistentHelpButtonExperiment","onboardingInviteStepExperiment","onboardingSessionSchedulingExperimentRollout","newTableColumnsExperimentControl","newTableColumnsSelectExperimentVariant","showNewOnboardingQuestionnaireVariant","showNewDefaultTemplates","disableMemoryUsageMonitoring","skipHomescreenForContentCalendarExperimentVariant","selectMoleculeInGroupConfig","collapseRevisionHistoryInDetailView","showHomescreenImportBannerVariant"],"codeVersion":"2592b2c3f319a4a22f11007de11972ab31b4027a","pageLoadId":"pglZBg0rLwOGO2PKl","runEnvironment":"production","featureFlagConfigurationByFeatureName":{},"isPubliclyShared":false,"rawTables":{"tblf5mgikMafQWApw":{"id":"tblf5mgikMafQWApw","name":"college"},"tblsJp0iEFIl5Pt03":{"id":"tblsJp0iEFIl5Pt03","name":"Imported table"},"tbltWqD3Lx1YEpr9o":{"id":"tbltWqD3Lx1YEpr9o","name":"college-rollup_totalsPTS"},"tbld36Mp8QowqJPGL":{"id":"tbld36Mp8QowqJPGL","name":"jinyong"}},"rawApplications":{"appdW4MAygzoW2ARe":{"id":"appdW4MAygzoW2ARe","name":"Basketball","visibleTableOrder":["tblsJp0iEFIl5Pt03","tblf5mgikMafQWApw","tbltWqD3Lx1YEpr9o"],"revisionHistoryEnabled":true,"color":"red","icon":null,"isOverPlanLimits":false},"appiNi6W6bmar5kM9":{"id":"appiNi6W6bmar5kM9","name":"武侠","visibleTableOrder":["tbld36Mp8QowqJPGL"],"revisionHistoryEnabled":true,"color":"cyan","icon":null,"isOverPlanLimits":false}},"rawWorkspaces":{"wspmlKJW2G8Cbgn5u":{"id":"wspmlKJW2G8Cbgn5u","name":"Orangant's Workspace","visibleApplicationOrder":["appdW4MAygzoW2ARe","appiNi6W6bmar5kM9"],"billingPlanId":"plnb0eZSBgXp7wQ3i","trialData":{"numDaysRemaining":538,"numDaysRemainingText":"538 days","previousBillingPlan":{"id":"plndkpdTaqYvi7YDT","name":"Creator","grouping":"pro","costPerUserPerMonthInCents":0},"nextBillingPlan":{"id":"plnbPlNFGdSC2wd8f","name":"Free","grouping":"free","costPerUserPerMonthInCents":0}},"isBlockDevelopmentRestrictionEnabled":false},"wspSHARED00000000":{"id":"wspSHARED00000000","appSharingWorkspace":true,"name":"Bases shared with me","visibleApplicationOrder":[]}},"isLoggedIn":true,"isFirstLogin":false,"sessionUserId":"usrUWb9ppRpzxeXdT","collaboratorsByWorkspaceId":{"wspmlKJW2G8Cbgn5u":[{"userId":"usrUWb9ppRpzxeXdT","permissionLevel":"owner","grantedByUserId":"usrUWb9ppRpzxeXdT","createdTime":"2020-09-14T03:37:16.000Z"}]},"collaboratorsByApplicationId":{},"rawUsers":{"usrEXTERNALTBLSVC":{"id":"usrEXTERNALTBLSVC","firstName":"Table Sync","lastName":"","email":"externaltablesync@noreply.airtable.com","state":"active","profilePicUrl":"https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fexternal_table_sync_icon@2x.png","enterpriseAccountIdToEnterpriseUserType":{},"name":"Table Sync"},"usrUWb9ppRpzxeXdT":{"id":"usrUWb9ppRpzxeXdT","firstName":"Zhang","lastName":"Tingting","email":"1155151208@link.cuhk.edu.hk","isEmailVerified":true,"isEmailValid":true,"state":"active","profilePicUrl":"https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_6.png","referralCode":"29fzapuS","lastRefreshedGoogleContacts":null,"referredByUserId":null,"prefs":{"shouldPutNewWorkspacesOnCreatorPlan":true,"onboardingTipsState":"hidden","hasSeenWorkflowsOnboarding":true,"shouldSkipColumnConfigChangeWarning":true},"creditInCents":0,"visibleWorkspaceOrder":["wspmlKJW2G8Cbgn5u","wspSHARED00000000"],"createdTime":"2020-09-14T03:37:16.000Z","enterpriseAccountIdToEnterpriseUserType":{},"name":"Zhang Tingting"},"usrWORKFLOWEXESVC":{"id":"usrWORKFLOWEXESVC","firstName":"Automations","lastName":"","email":"automations@noreply.airtable.com","state":"active","profilePicUrl":"https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fworkflows_icon@2x.png?v=2","enterpriseAccountIdToEnterpriseUserType":{},"name":"Automations"}},"workspaceMultiUseInvitesByWorkspaceId":{},"applicationMultiUseInvitesByApplicationId":{"appdW4MAygzoW2ARe":[{"inviteId":"invYRHBN7oGHDLHpv","permissionLevel":"create","emailDomain":null,"referredByUserId":"usrUWb9ppRpzxeXdT","inviteUrl":"https:\u002F\u002Fairtable.com\u002Finvite\u002Fl?inviteId=invYRHBN7oGHDLHpv&inviteToken=30694ca438a7b374d678b78d68123d7b007199650bad7895211033fc4199e684","createdTime":"2020-09-26T13:43:36.000Z"},{"inviteId":"invNbkzErrUvXdDFj","permissionLevel":"create","emailDomain":"link.cuhk.edu.hk","referredByUserId":"usrUWb9ppRpzxeXdT","inviteUrl":"https:\u002F\u002Fairtable.com\u002Finvite\u002Fl?inviteId=invNbkzErrUvXdDFj&inviteToken=41b208891560ff17dad82ba9826b6de66220e13415cba7389a125e682a2d3cf5","createdTime":"2020-09-26T13:44:05.000Z"},{"inviteId":"invushK2BZKsTb9Dt","permissionLevel":"create","emailDomain":null,"referredByUserId":"usrUWb9ppRpzxeXdT","inviteUrl":"https:\u002F\u002Fairtable.com\u002Finvite\u002Fl?inviteId=invushK2BZKsTb9Dt&inviteToken=07cfb3b5440e47a5a548b777158de337dd6f454af4d37615fa3929f0ac7737bf","createdTime":"2020-09-26T13:44:13.000Z"},{"inviteId":"invXlprGOs0svt1P2","permissionLevel":"comment","emailDomain":null,"referredByUserId":"usrUWb9ppRpzxeXdT","inviteUrl":"https:\u002F\u002Fairtable.com\u002Finvite\u002Fl?inviteId=invXlprGOs0svt1P2&inviteToken=125c13170c7be165901f533048f0b21b0a40a2e315163afb564f5b8e373f81e4","createdTime":"2020-09-26T13:44:55.000Z"}]},"rawBillingPlans":{"plnb0eZSBgXp7wQ3i":{"id":"plnb0eZSBgXp7wQ3i","grouping":"pro","isPublic":false,"maxRowsPerApplication":50000,"maxSyncedTablesPerApplication":20,"maxTotalAttachmentSizeInBytes":20000000000,"maxRevisionHistoryDays":365,"trialDurationInDays":550,"costPerUserPerMonthInCents":0,"shouldGenerateInvoices":false,"premiumFeatures":["automaticSyncedTables","personalViews","newSelectColors","premiumForms","blocksGridLayout","checkboxAndRatingColorAndIconStyles","blocks","recordColoring","lightBaseColors","calendarDateRange","calendarMultiDateField","passwordAndEmailDomainShares","fieldAndTableLocking","workflowsProRollout"]},"plnbPlNFGdSC2wd8f":{"id":"plnbPlNFGdSC2wd8f","grouping":"free","isPublic":true,"maxRowsPerApplication":1200,"maxSyncedTablesPerApplication":1,"maxTotalAttachmentSizeInBytes":2000000000,"maxRevisionHistoryDays":14,"trialDurationInDays":null,"costPerUserPerMonthInCents":0,"shouldGenerateInvoices":false,"premiumFeatures":[]}},"maxBillingPlanGrouping":"pro","lastTableIdsUsedByApplicationId":{"appdW4MAygzoW2ARe":"tbltWqD3Lx1YEpr9o","appiNi6W6bmar5kM9":"tbld36Mp8QowqJPGL"},"userQualityOfServiceLevel":"beta","isDesktopAppWithMacFramelessWindow":false,"userTrustStatus":"trustedUser","enabledEnterpriseFeatureNamesByWorkspaceId":{"wspmlKJW2G8Cbgn5u":[]},"enabledEnterpriseFeatureNamesBySharedApplicationId":{},"firstLoadSpan":{"ot-tracer-spanid":"09b5ccb63bcab0bb","ot-tracer-traceid":"1849f9cf4b3fff30","ot-tracer-sampled":"true"},"shouldShowLinkToEnterpriseAdminPanel":false,"secretSocketId":"socDx2Z6binZvCX4U","socketServerBaseUrl":"https:\u002F\u002Frt.airtable.com\u002F01224\u002F4","browserId":"brwdAeoPPwAoYxq70","didJustLogIn":false,"wasEmailJustVerified":false,"shouldShowWarningAboutHavingVerifiedExistingAccount":false,"workspaceSetupDialogState":"off","shouldShowEducationPlanPrompt":false,"shouldPreinstallTemplates":false,"collaboratorInviteOnboardingState":"off","numPendingInvitationsIfEmailIsNotVerified":0,"unseenNotificationCount":0,"adminAnnouncementText":null,"stripePublishableKey":"pk_be40LalrqNyovrhYTMlclChgOLW2H","isGlobalReadOnly":false,"releaseVersionIfStaging":null,"workspaceSetupDialogProBillingPlanId":"plnguNcA6hGo17hxU","referralMessageHtmlOverride":null,"activeBillingPlanPromotions":[],"intercomSettings":{"app_id":"wb1whb4b","user_id":"usrUWb9ppRpzxeXdT","email":"1155151208@link.cuhk.edu.hk","name":"Zhang Tingting","company":{"id":"link.cuhk.edu.hk","name":"link.cuhk.edu.hk"},"user_hash":"79e906a9e335350fa528b7ba4c12e46ae75c73a80b4ed7e0e2b7dbfbb5def6fd","alignment":"left"},"zendeskSettings":{"key":"eb903b86-34a0-4936-860e-13dea6ce7606","shouldEnableLiveChat":false,"shouldEnableHighTouchProactiveChat":false,"email":"1155151208@link.cuhk.edu.hk","name":"Zhang Tingting"},"filepickerApiKey":"A-uAc3WYcRkqLqx_--iV5z","updatePrimitiveCellThrottleMs":3000,"blockEditingFreeTrial":true,"blockIdsAllowedOnFreePlan":["blkQyAKhJoGKqnR0T"],"blockCliMinimumVersion":"0.0.49","blockIdsFirstParty":["blkMSgbLfLli7QJDC","blkpPq3gFW517NxMh","blk7qrXbx1ivWn9Mr","blkE8T4ZsOtYoHYhf","blkkBPAuMGLqhvKIr","blkDs7Aqxmk23C1cO","blkTfDjJEfMyATT4i","blknmXKkZjB7scdSq","blkFlbIeDLOuIGdr0","blkky4MP21lb4JgNF","blkstv5j5mEXKM9Wr","blkBt22lyst8efk7Q","blkC9nrkOuIHHButo","blkZ4Zfp8xSYvlQ03","blk6Klyq4UqAU4oO0","blkhDEgsVSaRQawmk","blkswKPCL2LHhb9Qi","blkQyAKhJoGKqnR0T","blkgXqSFx9jS0s8R0","blk6VwJBOJNjaVwWw","blkn3qfBuPpgqXPAw","blkuzLZACSk6lPezv","blkNeu8QsnzGn97kw","blkLOD0LFA1xMmaAO","blkFCsWvVTGeH1ZdF","blkPFliFba9T3b4kF","blkyAnUVk7O0NMrQp","blk9t1qtkVvW3NdYr","blkWDNaZnQvEJvcNf","blkt8D4LiDFZ1SCop","blkJBdZ9AdZ352cpX","blk8ovCuhVI9unKpT","blkzzC9j83Vjn3jWi","blk5NQesXNFEXjDJD","blkHXtnmlSAmEcr0v","blk7ovQfzbKBjTrwy","blkqUpsgSfh4A2YiZ","blkAfv4Wem0TELsBZ","blkXH1K2VKtGmOHXm","blk9USIwXASM4r6zO","blkgqKJ09QrbIYgqo","blkOQ1VY0ZgyMnXPR","blkKpFTZdhwDSDMNl","blkJCvWUvTuBw2yoa","blkaMTSIWI3BLGZzn","blksvgaccdjtRy7lr","blk6uWKswycoSwrpX","blk6xvU2oSZPNVge0","blknp9c4t87ptBlS8","blkDNJFKnhIHVWDgR","blkruGQa01pWHhzw2","blkCQGWClANy4jjUl","blkk3VNXnl2raaBE8","blkx74ZEYbrzxBnX1","blkcQAzTn9Zy7CVfj","blk9eXKffGfv1BjKQ","blklujT6UJntDeLBw","blkqUrtsb39vAM1FH","blk4rWerLJHCcB1LD","blkphooLl4Bn5tPOD","blkHCNixMwZNW6OU1","blk05FfJLc1EJbajl","blkq8vstNa5kItqmc","blkyD26Bfx6CGwfI4"],"blockIdsPartner":["blkkfsmdxRAFtcFRk","blkFL6ITD0lNLeiPu","blkM0P74KohxQyDSO","blkIc7L7dTCvfwfQb","blkEo3sNZ8Rdle3zd"],"blockIdsThirdParty":["blk57zTNniLeiB8m2","blkXPJPAu0k3SYAKS","blkU0Q1AxP1kcCS67","blkQ7qqVJ3LgsfF0L","blkwgLQGZ8K4ZE6d1"],"blockIdsDisabled":[],"blockIdByButtonBlockAction":{"page-designer":"blkzzC9j83Vjn3jWi","sendgrid":"blkt8D4LiDFZ1SCop","scripting":"blkQyAKhJoGKqnR0T","url-preview":"blkNeu8QsnzGn97kw","formstack":"blkM0P74KohxQyDSO","pexels":"blkFL6ITD0lNLeiPu"},"scriptingBlockId":"blkQyAKhJoGKqnR0T","optimizelyEventConfigs":null,"seoExploreApplicationIds":[],"isEligibleForOnboardingSessionSchedulingState":false};
+</script>
+<script nonce="d223acSC8ZBu">performance.measure && performance.measure('initDataLoad', 'initDataLoad:start')</script><script nonce="d223acSC8ZBu">(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-55182693-1', 'auto');
+ga('send', 'pageview');</script><script nonce="d223acSC8ZBu">
+!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
+    analytics.load("nwg4rpj479");
+}}();</script><img height="1" width="1" style="display:none" alt="" src="https://dc.ads.linkedin.com/collect/?pid=23413&amp;fmt=gif"/><img height="1" width="1" style="display:none" alt=" " src="https://analytics.twitter.com/i/adsct?txn_id=l6gpl&amp;p_id=Twitter&amp;tw_sale_amount=0&amp;tw_order_quantity=0"/><script nonce="d223acSC8ZBu">performance.mark && performance.mark('jsEntryBundleLoad:start')</script>
+<script src="//static.airtable.com/js/lib/regenerator-runtime.min.js" nonce="d223acSC8ZBu" crossorigin=anonymous ></script>
+<script src="//static.airtable.com/js/lib/jquery/2.1.4/jquery.min.js" nonce="d223acSC8ZBu" crossorigin=anonymous ></script>
+<script src="//static.airtable.com/js/lib/jquery/jquery-ui-1.11.4.custom.mod6.min.js" nonce="d223acSC8ZBu" crossorigin=anonymous ></script>
+<script src="https://static.airtable.com/js/by_sha/2592b2c3/liveapp.js" nonce="d223acSC8ZBu" crossorigin=anonymous ></script><script src="https://static.airtable.com/js/by_sha/2592b2c3/track_page_view.js" nonce="d223acSC8ZBu" crossorigin="anonymous" defer=""></script></head><body class="pageload-app coloredBackground coloredBorder">
+<div id="hyperbaseContainer">
+<div class="appTopBarContainer"></div>
+<div id="reactViewRoot"></div>
+<div class="baymax">
+<div id="homeScreen">
+<div class="homeScreenTopBar"></div>
+<div class="homeScreenContentContainer overflow-hidden">
+</div>
+</div></div>
+<div id="applicationContainer">
+<div id="blocksContainer" class="baymax relative"></div>
+<div id="workflowsContainer" class="baymax relative"></div>
+<div id="appControlsContainer" class="relative hide-print"></div>
+<div id="table">
+<div class="viewBarContainer baymax flex">
+<span class="viewSwitcherContainer flex-none flex items-center"></span>
+<span class="viewConfigContainer flex-auto flex items-center"></span>
+<div id="searchButton" class="flex-none flex"></div>
+</div><div id="view" class="overflow-hidden">
+<div class="viewLoadOverlay">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="27"
+height="27"
+viewBox="0 0 54 54"
+class="animate-spin-scale animate-infinite loader mx-auto"
+style="shape-rendering: geometricPrecision;">
+<g>
+<path d="M10.9,48.6c-1.6-1.3-2-3.6-0.7-5.3c1.3-1.6,3.6-2.1,5.3-0.8c0.8,0.5,1.5,1.1,2.4,1.5c7.5,4.1,16.8,2.7,22.8-3.4c1.5-1.5,3.8-1.5,5.3,0c1.4,1.5,1.4,3.9,0,5.3c-8.4,8.5-21.4,10.6-31.8,4.8C13,50.1,11.9,49.3,10.9,48.6z" fill="currentColor" />
+<path d="M53.6,31.4c-0.3,2.1-2.3,3.5-4.4,3.2c-2.1-0.3-3.4-2.3-3.1-4.4c0.2-1.1,0.2-2.2,0.2-3.3c0-8.7-5.7-16.2-13.7-18.5c-2-0.5-3.2-2.7-2.6-4.7s2.6-3.2,4.7-2.6C46,4.4,53.9,14.9,53.9,27C53.9,28.5,53.8,30,53.6,31.4z" fill="currentColor" />
+<path d="M16.7,1.9c1.9-0.8,4.1,0.2,4.8,2.2s-0.2,4.2-2.1,5c-7.2,2.9-12,10-12,18.1c0,1.6,0.2,3.2,0.6,4.7c0.5,2-0.7,4.1-2.7,4.6c-2,0.5-4-0.7-4.5-2.8C0.3,31.5,0,29.3,0,27.1C0,15.8,6.7,5.9,16.7,1.9z" fill="currentColor" />
+</g>
+</svg>
+</div></div>
+</div></div>
+<div id="gridView" class="template baymax">
+<div id="paneContainer">
+<div id="scrollOverlay" class="antiscroll-wrap">
+<div class="antiscroll-inner">
+<div class="content"></div>
+</div>
+</div>
+<div id="headerAndDataRowContainer">
+<div class="leftPaneWrapper">
+<div id="headerLeftPane" class="pane">
+<div class="paneInnerContent"></div>
+</div>
+<div id="dataLeftPane" class="pane">
+<div class="paneInnerContent"></div>
+</div>
+</div>
+<div id="paneDivider">
+<div class="line noevents"></div>
+<div class="dragHandle noevents"></div>
+<div class="tooltip">Drag to adjust frozen columns</div>
+</div>
+<div class="rightPaneWrapper">
+<div id="headerRightPane" class="pane">
+<div class="paneInnerContent"></div>
+</div>
+<div id="dataRightPane" class="pane">
+<div class="paneInnerContent"></div>
+</div>
+</div>
+<div class="fillHandleWrapper">
+<div id="fillHandle"></div>
+</div>
+<div id="cursorCellBadgeContainer"></div>
+</div>
+<div id="summaryBarContainer">
+<div class="leftPaneWrapper">
+<div id="summaryLeftPane" class="pane">
+<div class="paneInnerContent"></div>
+</div>
+</div>
+<div class="rightPaneWrapper">
+<div id="summaryRightPane" class="pane">
+<div class="paneInnerContent"></div>
+</div>
+</div>
+</div>
+</div>
+<div id="rowRightClickMenu"></div>
+<div class="findBarContainer"></div>
+<div id="clipboardContainer"></div>
+<div id="emptyViewMessageContainer"></div>
+<div id="addRowButton"></div>
+</div><div class="headerRow template">
+<div class="headerRow leftPane">
+<div class="staticCellContainer">
+<div class="rowNumber">
+<div class="checkbox flex items-center justify-center text-white">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="12"
+height="12"
+viewBox="0 0 12 12"
+class="icon"
+style="shape-rendering: geometricPrecision;">
+<path
+fill-rule="evenodd"
+fill="currentColor"
+d="M4.28873956,8.67773237 C4.68155785,9.06558677 5.32353851,9.05881767 5.7149082,8.67029224 L8.99219858,5.41681942 C9.38703148,5.02485595 9.39324696,4.39324696 9,4 L9,4 C8.60947571,3.60947571 7.98900805,3.60797445 7.59455526,4.0169601 L5.35239726,6.34172612 C5.15777363,6.54352029 4.85168871,6.5448785 4.66030753,6.33553882 L4.38384571,6.03313484 C4.01009312,5.62431068 3.39324696,5.60675304 3,6 L3,6 C2.60947571,6.39052429 2.61406454,7.02421959 3.00415366,7.40937929 L4.28873956,8.67773237 Z">
+</path>
+</svg></div>
+</div>
+</div>
+</div>
+<div class="headerRow rightPane">
+<div class="cell ghost" title="Add field">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="16"
+height="16"
+viewBox="0 0 16 16"
+class="icon"
+style="shape-rendering: geometricPrecision;">
+<path
+fill-rule="evenodd"
+fill="currentColor"
+d="M9,7 L9,3.5 C9,3.224 8.776,3 8.5,3 L7.5,3 C7.224,3 7,3.224 7,3.5 L7,7 L3.5,7 C3.224,7 3,7.224 3,7.5 L3,8.5 C3,8.776 3.224,9 3.5,9 L7,9 L7,12.5 C7,12.776 7.224,13 7.5,13 L8.5,13 C8.776,13 9,12.776 9,12.5 L9,9 L12.5,9 C12.776,9 13,8.776 13,8.5 L13,7.5 C13,7.224 12.776,7 12.5,7 L9,7 Z">
+</path>
+</svg></div>
+</div>
+</div><div class="cell header template" data-columnid="{columnId}", data-columnindex="{columnIndex}">
+<div class="contentWrapper">
+<div class="nameAndDescription">
+<span class="name"></span>
+</div>
+</div>
+<span class="warningSign">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="12"
+height="12"
+viewBox="0 0 12 12"
+class="icon"
+style="shape-rendering: geometricPrecision;">
+<path
+fill-rule="evenodd"
+fill="currentColor"
+d="M0.460887779,10.1167095 L5.07609578,1.27167242 C5.58808735,0.290441573 6.41433749,0.293204761 6.92479743,1.27167242 L11.5391933,10.1167095 C11.7934846,10.604144 11.5511774,11 10.9975267,11 L1.00247329,11 C0.455760956,11 0.206346487,10.6045374 0.460887779,10.1167095 Z M5,4.0093689 L5,5.9906311 C5,6.55664682 5.44771525,7 6,7 C6.55613518,7 7,6.54809015 7,5.9906311 L7,4.0093689 C7,3.44335318 6.55228475,3 6,3 C5.44386482,3 5,3.45190985 5,4.0093689 Z M6,10 C6.55228475,10 7,9.55228475 7,9 C7,8.44771525 6.55228475,8 6,8 C5.44771525,8 5,8.44771525 5,9 C5,9.55228475 5.44771525,10 6,10 Z">
+</path>
+</svg></span>
+<span class="menuButton">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="12"
+height="12"
+viewBox="0 0 12 12"
+class="icon"
+style="shape-rendering: geometricPrecision;">
+<path
+fill-rule="evenodd"
+fill="currentColor"
+d="M3.6011,4.00002 L8.4011,4.00002 C8.8951,4.00002 9.1771,4.56402 8.8811,4.96002 L6.4811,8.16002 C6.2411,8.48002 5.7611,8.48002 5.5211,8.16002 L3.1211,4.96002 C2.8241,4.56402 3.1071,4.00002 3.6011,4.00002">
+</path>
+</svg></span>
+<div class="columnDescriptionEditorContainer"></div>
+<div class="resizeHandle"><div class="draggingLine"></div></div>
+<div class="columnMenuContainer"></div>
+<div class="columnConfigDialogContainer"></div>
+</div><script id="dataRowLeftPaneTemplate" type="text/template">
+<div class="dataRow leftPane {classes}" data-rowid="{rowId}" style="top: {top}px; left: {left}px;">
+<div class="staticCellContainer">
+<div class="rowNumber">
+<div class="grabby"></div>
+<div class="numberText" data-rowNumberLength="{rowNumberLength}">{rowNumberText}</div>
+<div class="checkbox flex items-center justify-center text-white">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="12"
+height="12"
+viewBox="0 0 12 12"
+class="icon"
+style="shape-rendering: geometricPrecision;">
+<path
+fill-rule="evenodd"
+fill="currentColor"
+d="M4.28873956,8.67773237 C4.68155785,9.06558677 5.32353851,9.05881767 5.7149082,8.67029224 L8.99219858,5.41681942 C9.38703148,5.02485595 9.39324696,4.39324696 9,4 L9,4 C8.60947571,3.60947571 7.98900805,3.60797445 7.59455526,4.0169601 L5.35239726,6.34172612 C5.15777363,6.54352029 4.85168871,6.5448785 4.66030753,6.33553882 L4.38384571,6.03313484 C4.01009312,5.62431068 3.39324696,5.60675304 3,6 L3,6 C2.60947571,6.39052429 2.61406454,7.02421959 3.00415366,7.40937929 L4.28873956,8.67773237 Z">
+</path>
+</svg></div>
+</div>
+<div class="rowColorContainer">
+<div class="rowColor {rowColorClass}"></div>
+</div>
+<a class="expandButtonLeft" href="{expandRowUrl}">
+<i title="Expand record (space)">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="12"
+height="12"
+viewBox="0 0 12 12"
+class="icon"
+style="shape-rendering: geometricPrecision;">
+<path
+fill-rule="evenodd"
+fill="currentColor"
+d="M4.77546101,10.4553613 L1.81474478,10.8783208 C1.25439084,10.9583713 0.87938524,10.5736845 0.958225649,10.0218016 L1.38118511,7.06108542 C1.45982823,6.51058357 1.83916177,6.38790899 2.22968611,6.77843328 L2.93679297,7.48554006 L4.10581974,6.3165134 C4.49903533,5.92329779 5.12937282,5.9261252 5.51989706,6.31664944 C5.91314397,6.70989635 5.91048225,7.3402777 5.52003317,7.73072683 L4.35100654,8.89975362 L5.05811323,9.6068604 C5.45136014,10.0001074 5.32208977,10.3772715 4.77546101,10.4553613 Z M7.10137856,1.3810729 L10.0620948,0.958113443 C10.6224487,0.87806288 10.9974543,1.26274971 10.9186139,1.81463257 L10.4956545,4.7753488 C10.4170113,5.32585066 10.0376778,5.44852523 9.64715346,5.05800094 L8.94004659,4.35089416 L7.45430822,5.83663252 C7.06109263,6.22984813 6.43075515,6.22702073 6.0402309,5.83649648 C5.64698399,5.44324957 5.64964572,4.81286823 6.04009479,4.42241909 L7.52583303,2.9366806 L6.81872633,2.22957382 C6.42547942,1.83632686 6.5547498,1.45916273 7.10137856,1.3810729 Z">
+</path>
+</svg></i>
+<div class="commentCount"></div>
+</a>
+</div>
+{cells}
+</div>
+</script><script id="dataRowRightPaneTemplate" type="text/template">
+<div class="dataRow rightPane {classes}" data-rowid="{rowId}" style="top: {top}px;">
+{cells}
+<div class="cell ghost"></div>
+</div>
+</script><div class="dataRow ghost template">
+<div class="dataRow ghost leftPane">
+<div class="rowNumber">
+</div>
+</div>
+<div class="dataRow ghost rightPane">
+</div>
+</div><div id="snackbarContainer"></div><div id="softAlert" class="baymax softDialog white rounded-big stroked1">
+<h3 class="title mb2 display huge strong line-height-3">Alert</h3>
+<div class="body mb2 break-word">Lorem ipsum</div>
+<div class="buttons">
+<div class="okayButton right py1 px2 blue text-white strong rounded clickable-stroked1-inset pointer" tabindex="1">Okay</div>
+</div>
+</div><div class="detailViewWithActivityFeedBase template">
+<div class="background hide-print"></div>
+<div class="dialog">
+<div class="header flex"></div>
+<div class="detailViewWithActivityFeedBaseLeft">
+<div class="detailViewContainer"></div>
+</div>
+<div class="detailViewWithActivityFeedBaseRight">
+<div class="rowLevelActivityFeed"></div>
+</div>
+</div>
+</div><div class="contentEditableTextboxContainer template">
+<div class="contentEditableTextbox light-scrollbar" contenteditable="true" role="textbox" aria-multiline="true"></div>
+<div class="mentionIcon absolute bottom-0 right-0 p1 mr-half quieter link-unquiet strong pointer">@</div>
+<ul class="mentionSuggest hmenu hdropdown absolute stroked rounded white">
+<li class="template" menuitemvalue="{userId}">
+<div class="userIconContainer"></div><span class="name">{userName}</span>
+</li>
+</ul>
+<input class="editableFix" tabindex="-1"></input>
+<div class="urlMenu hbubblemenu hdropdown">
+<div class="flex items-center">
+<div class="flex items-center mr1 quiet">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="12"
+height="12"
+viewBox="0 0 12 12"
+class="icon"
+style="shape-rendering: geometricPrecision;">
+<path
+fill-rule="evenodd"
+fill="currentColor"
+d="M2,8.00003 C2.55,8.00003 3,8.45003 3,9 C3,9.55003 2.55,10 2,10 L1,10 C0.45,10 0,9.55003 0,9 L0,4.00003 C0,3.86203 0.028,3.73103 0.079,3.61203 C0.18,3.37303 0.373,3.18003 0.612,3.07903 C0.731,3.02803 0.862,3.00003 1,3.00003 L7,3.00003 C7.138,3.00003 7.269,3.02803 7.388,3.07903 C7.627,3.18003 7.82,3.37303 7.921,3.61203 C7.972,3.73103 8,3.86203 8,4.00003 L8,6.00003 C8,6.55003 7.55,7.00003 7,7.00003 C6.45,7.00003 6,6.55003 6,6.00003 L6,5 L2,5 L2,8.00003 Z M11.9211,3.61173 C11.9721,3.73173 12.0001,3.86273 12.0001,3.99973 L12.0001,8.99973 C12.0001,9.54973 11.5501,9.99973 11.0001,9.99973 L5.0001,9.99973 C4.4501,9.99973 4.0001,9.54973 4.0001,8.99973 L4.0001,6.49973 C4.0001,6.22473 4.2251,5.99973 4.5001,5.99973 C4.7751,5.99973 5.0001,6.22473 5.0001,6.49973 L5.0001,7.99973 L10.0001,7.99973 L10.0001,4.99973 C9.4501,4.99973 9.0001,4.54973 9.0001,3.99973 C9.0001,3.44973 9.4501,2.99973 10.0001,2.99973 L11.0001,2.99973 C11.1371,2.99973 11.2691,3.02773 11.3881,3.07873 C11.6271,3.18073 11.8191,3.37273 11.9211,3.61173 Z">
+</path>
+</svg></div>
+<div class="linkContainer"></div>
+</div>
+</div>
+</div><div class="attachmentViewer template absolute top-0 bottom-0 left-0 right-0 hide invisible">
+<div class="attachmentViewerContents absolute top-0 bottom-0 left-0 right-0">
+<div class="filename absolute text-white pointer center truncate hover-underline"></div>
+<div class="close absolute p2 top-0 right-0 text-white pointer link-quiet"></div>
+<div class="loading absolute p2 top-0 left-0"></div><div class="leftArrow left-0 absolute pointer">
+<i class="icon-angle-left absolute pointer text-white quieter link-unquiet"></i>
+</div><div class="rightArrow right-0 absolute pointer">
+<i class="icon-angle-right absolute pointer text-white quieter link-unquiet"></i>
+</div><div class="attachmentContainer absolute"></div><div class="bottomBar absolute bottom-0 center width-full">
+<div class="number"></div>
+<div class="thumbnails absolute fit nowrap overflow-hidden bottom-0 mb2"></div>
+<div class="flex items-center absolute bottom-0 right-0 m2 mr2">
+<div class="attachmentRemoveButton text-white pointer link-quiet ml2" title="Remove attachment"></div>
+<div class="attachmentRenameButton text-white pointer link-quiet ml2" title="Rename attachment"></div>
+<div class="attachmentDownloadButton text-white pointer link-quiet ml2" title="Download attachment"></div>
+</div>
+</div>
+</div>
+</div><div class="formulaAutocomplete formula template col-12 relative">
+<div class="flex flex-column col-12 p1">
+<div
+role="textbox"
+tabindex="0"
+contenteditable="true"
+aria-multiline="true"
+class="input flex-auto p1 white border-darken2 border-thick rounded-big code overflow-auto"
+style="max-height: 20vh;"
+></div>
+<div class="flex-none">
+<div class="suggestionsHeader">insert a field or function</div>
+<div
+class="suggestions"
+style="max-height: calc(100vh - 20vh - 520px); min-height: 50px;"
+></div>
+</div>
+</div>
+<div class="documentationAndSuggestions">
+<div class="documentation template rounded-big white stroked1 p1 small break-word">
+<div class="definition">{definition}</div>
+<div class="summary">{summary}. Example:</div>
+<div class="example">{example}</div>
+</div>
+<div class="p1 small examples rounded-big white stroked1 hide">
+<div class="quiet mb-half strong">Examples:</div>
+<div class="monospace code">
+Amount * Price<br />
+AVERAGE(column1, column2)<br />
+Name &amp; "-" &amp; Date<br />
+IF(Price * Quantity &gt; 5, "Yes", "No")
+</div>
+</div>
+</div>
+</div><div class="suggestion column template" columnid="{id}">
+<div class="name">{name}</div>
+<div class="type"><span class="typeIcon"></span> <span>field</span></div>
+</div><div class="suggestion function template" functionname="{name}">
+<div class="name">{name}()</div>
+<div class="type">function</div>
+</div><div class="suggestion rollup template">
+<div class="name">{name}(values)</div>
+<div class="summary">{summary}</div>
+</div><div class="formulaAutocomplete rollup template col-12 relative">
+<div class="px2">
+<div contenteditable="true" class="input rounded white px1 py-half code" tabindex="6"></div>
+</div>
+<div class="col-12">
+<div class="documentationAndSuggestions">
+<div class="documentation template rounded-big white stroked1 p1 small break-word">
+<div class="definition">{definition}</div>
+<div class="summary">{summary}</div>
+</div>
+</div>
+<div class="px2 pb1">
+<div class="suggestionsHeader">insert a rollup function</div>
+<div class="suggestions"></div>
+</div>
+</div>
+</div><div class="formDesignerView template"><div class="availableFormFieldContainer"><div class="formDesignerErrorMessageContainer">
+</div><div class="availableFormFieldsAndAllButtons">
+<div class="flex items-center justify-between">
+<div>Fields</div>
+<div class="flex items-center small">
+<div class="removeAll quiet understroke link link-unquiet pointer">remove all</div>
+<div class="addAll ml2 quiet understroke link link-unquiet pointer">add all</div>
+</div>
+</div>
+<div class="availableFormFields"></div>
+</div>
+<div class="dropToRemoveContainer"><div></div></div>
+</div><div class="formContainer"><div class="form">
+<div class="formHeaderContainer baymax rounded-big-top overflow-hidden"></div>
+<div class="px3">
+<div class="mx-auto pt3 col-12" style="max-width: 512px;">
+<div class="formFieldContainer"></div>
+<div class="formSubmitButtonContainer"></div>
+<div class="formAirtableBrandingContainer"></div>
+</div>
+</div>
+</div><div class="formFooterContainer"></div>
+</div><div class="unavailableInMobileSharedApplicationOverlay absolute all-0">
+<div class="message absolute all-0">
+Forms are not available in mobile shared bases.
+</div>
+</div>
+</div><div id="globalAlertContainer" class="baymax"></div>
+<div id="globalLoadOverlayContainer"></div>
+<div id="modalContainer"></div>
+<div id="onboardingTipsContainer"></div>
+<div id="workspaceSetupDialogContainer"></div>
+<div id="modelBrowserContainer"></div>
+</div><div id="marketingWidget" style="display:none;position:fixed;left:0;bottom:0;width:0;height:0;background:transparent;z-index:9999999;overflow:hidden;opacity:0;pointer-events:none;transition:opacity 250ms"><iframe sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox" referrerPolicy="no-referrer" src="https://static.airtable.com/html/intercom_widget.html" style="position:absolute;left:0;bottom:0;width:100vw;height:100vh;border:0;background:transparent;overflow:hidden"></iframe><script type="text/javascript" nonce="d223acSC8ZBu">!function(){const e=document.querySelector("#marketingWidget"),t=e.querySelector("iframe");t.onload=function(){const n=t.contentWindow,i=e.style;n.postMessage({kind:"init",data:{intercomSettings:{app_id:"wb1whb4b",user_id:"usrUWb9ppRpzxeXdT",email:"1155151208@link.cuhk.edu.hk",name:"Zhang Tingting",company:{id:"link.cuhk.edu.hk",name:"link.cuhk.edu.hk"},user_hash:"79e906a9e335350fa528b7ba4c12e46ae75c73a80b4ed7e0e2b7dbfbb5def6fd",alignment:"left"}}},"https://static.airtable.com"),window.addEventListener("message",function(e){if(e.source!==n||"https://static.airtable.com"!==e.origin)return;const t=e.data;if(t&&"object"==typeof t)switch(t.kind){case"show":i.opacity="1",i.pointerEvents="auto";break;case"hide":i.opacity="0",i.pointerEvents="none";break;case"resize":{const e=60;i.width=t.data.rect.width+e+"px",i.height=t.data.rect.height+e+"px";break}default:console.error("Unrecognized event kind '"+t.kind+"'")}}),i.display="block"}}();</script></div><div id="supportWidget" style="display:none;position:fixed;right:8px;bottom:20px;max-height:calc(100% - 40px);height:549px;width:365px;background:transparent;z-index:9999999;overflow:hidden;opacity:0;pointer-events:none;transition:opacity 250ms"><iframe sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox" referrerPolicy="no-referrer" src="https://static.airtable.com/html/zendesk_widget.html" style="width:100%;height:100%;margin:0;padding:0;border:0;background:transparent;overflow:hidden"></iframe><script type="text/javascript" nonce="d223acSC8ZBu">!function(){const e=document.querySelector("#supportWidget"),t=e.querySelector("iframe");t.onload=function(){const n=t.contentWindow,a=e.style;n.postMessage({kind:"init",data:{zendeskSettings:{key:"eb903b86-34a0-4936-860e-13dea6ce7606",shouldEnableLiveChat:!1,shouldEnableHighTouchProactiveChat:!1,email:"1155151208@link.cuhk.edu.hk",name:"Zhang Tingting"}}},"https://static.airtable.com"),window.addEventListener("message",function(e){if(e.source!==n||"https://static.airtable.com"!==e.origin)return;const t=e.data;if(t&&"object"==typeof t)switch(t.kind){case"show":a.opacity="1",a.pointerEvents="auto";break;case"hide":a.opacity="0",a.pointerEvents="none";break;case"chatStart":case"chatEnd":break;default:console.error("Unrecognized event kind '"+t.kind+"'")}}),a.display="block"}}();</script></div><div id="supportWidget" style="display:none;position:fixed;right:8px;bottom:20px;max-height:calc(100% - 40px);height:549px;width:365px;background:transparent;z-index:9999999;overflow:hidden;opacity:0;pointer-events:none;transition:opacity 250ms"><iframe sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox" referrerPolicy="no-referrer" src="https://static.airtable.com/html/zendesk_widget.html" style="width:100%;height:100%;margin:0;padding:0;border:0;background:transparent;overflow:hidden"></iframe><script type="text/javascript" nonce="d223acSC8ZBu">!function(){const e=document.querySelector("#supportWidget"),t=e.querySelector("iframe");t.onload=function(){const n=t.contentWindow,a=e.style;n.postMessage({kind:"init",data:{zendeskSettings:{key:"eb903b86-34a0-4936-860e-13dea6ce7606",shouldEnableLiveChat:!1,shouldEnableHighTouchProactiveChat:!1,email:"1155151208@link.cuhk.edu.hk",name:"Zhang Tingting"}}},"https://static.airtable.com"),window.addEventListener("message",function(e){if(e.source!==n||"https://static.airtable.com"!==e.origin)return;const t=e.data;if(t&&"object"==typeof t)switch(t.kind){case"show":a.opacity="1",a.pointerEvents="auto";break;case"hide":a.opacity="0",a.pointerEvents="none";break;case"chatStart":case"chatEnd":break;default:console.error("Unrecognized event kind '"+t.kind+"'")}}),a.display="block"}}();</script></div></body></html>
