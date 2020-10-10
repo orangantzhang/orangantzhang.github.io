@@ -107,9 +107,9 @@
     function sayHello() {
      var username = document.forms[0].username.value;
     var number = document.forms[0].number.value;
-   if(number>'7'){alert("Hello " + username +  "! The number is greater than that.");} 
-   else if (number< "7") {alert ('Hello'+ username + '! The number is smaller than that.');
-       } else {alert ('Hello'+ username + "! You are clever! 7 is right!"); } 
+   if(number>'4'){alert("Sorry " + username +  "! Your number is greater than that I set.");} 
+   else if (number< "4") {alert ('Sorry'+ username + '! Your guess number is smaller than that I set.');
+       } else {alert ('Congratulations '+ username + "!  4 is right!"); } 
 }
     document.getElementById('submitBtn').addEventListener('click', sayHello);
 </script>
