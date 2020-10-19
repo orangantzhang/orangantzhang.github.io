@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>Wu Xia</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    </head>
+<body>
+
+        <div class="container">
+                                   
+   
+
+     <br><br>
+   
+                            
+     <br><br>
+    <!--selector-->
+    <div>
+                            <form>
+                                <select id="selecter" class="form-control" onchange="table();">
+                                    <option value selected disabled>请选择分类方式。</option>
+                                    <option value="0">按字数分类</option>
+                                    <option value="1">按评价分类</option>
+                                    
+                                </select>
+                            </form>
+                            <br><br>
+
+    <!--airtable-->  
+    <div id="table">
+                                <iframe id="iframe" class="airtable-embed" src="https://airtable.com/embed/shrAQy83VL8Chl49W?backgroundColor=cyan&viewControls=on" frameborder="0" onmousewheel="" width="100%" height="1000" style="background: transparent; border: 1px solid #ccc;"></iframe>
+                            </div>
+<br>
+  <script>
+       function table(){
+    var selecter = parent.document.getElementById("selecter");
+                                if (selecter.value=="0"){document.getElementById("iframe").src="https://airtable.com/embed/shr5fu1HyQQubcSrV?backgroundColor=cyan&viewControls=on"};
+                                if (selecter.value=="1"){document.getElementById("iframe").src="https://airtable.com/embed/shrESvxZRZ6EzxgX8?backgroundColor=cyan&viewControls=on"};
+                               }
+
+  </script>
+                    </div>
+
+    
+<br><br><br>
+
+        
+    </body>
+
+</html>
