@@ -7,7 +7,7 @@ var map = L.map('map')
  layerGroup = L.layerGroup().addTo(map);
 
  var items = [];
- var airtable_read_endpoint = "https://api.airtable.com/v0/appKIU0zkdHt3AVTL/Venues?api_key=keycj6dRwXwYLEjiv";
+ var airtable_read_endpoint = "https://api.airtable.com/v0/appssOc9gDtclqRzc/Product?api_key=key9NWSD30oren2mz";
  var data = [];
  $.getJSON(airtable_read_endpoint, function(result) {
        $.each(result.records, function(key,value) {
