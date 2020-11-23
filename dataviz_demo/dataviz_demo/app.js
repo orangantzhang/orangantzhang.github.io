@@ -93,7 +93,7 @@ $(document).ready(function(){
       var items = [];
       var i = 0;
       $('.table-responsive').show();
-      var airtable_read_endpoint = "https://api.airtable.com/v0/appKIU0zkdHt3AVTL/Roll-up?api_key=keycj6dRwXwYLEjiv";
+      var airtable_read_endpoint = "https://api.airtable.com/v0/appssOc9gDtclqRzc/Product?api_key=key9NWSD30oren2mz";
       $.getJSON(airtable_read_endpoint, function(result) {
             $.each(result.records, function(key,value) {
                 items = [];
@@ -123,7 +123,7 @@ $(document).ready(function(){
         var items = [];
         var i = 0;
         $('.table-responsive').show();
-        var airtable_read_endpoint = "https://api.airtable.com/v0/appKIU0zkdHt3AVTL/Roll-up?api_key=keycj6dRwXwYLEjiv";
+        var airtable_read_endpoint = "https://api.airtable.com/v0/appssOc9gDtclqRzc/Product?api_key=key9NWSD30oren2mz";
         $.getJSON(airtable_read_endpoint, function(result) {
               $.each(result.records, function(key,value) {
                   items = [];
