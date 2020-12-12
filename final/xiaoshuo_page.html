@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Grayscale - Start Bootstrap Theme</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <!-- Font Awesome icons (free version)-->
+  <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <button class="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"> Menu <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#">
+              <font size="3">主页</font>
+            </a></li>
+          <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="text-center my-5 mt-5 pt-5 pb-0">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="my-5">金庸小说推荐&nbsp;<br></h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                <h4 class="text-right text-primary" style="">Part 1</h4>
+              </div>
+              <div class="col-md-7">
+                <h3 class="text-left">小说字数||豆瓣评分</h3>
+              </div>
+            </div>
+            <p class="pb-4">帮助阅读时间有限的爱好者更好参考阅读顺序。</p>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="chartjs-size-monitor">
+                  <div class="chartjs-size-monitor-expand">
+                    <div class=""></div>
+                  </div>
+                  <div class="chartjs-size-monitor-shrink">
+                    <div class=""></div>
+                  </div>
+                </div> <canvas id="myChart" width="1219" height="609" class="chartjs-render-monitor" style="display: block; height: 406px; width: 813px;"></canvas>
+              </div>
+              <div class="col-md-3">
+                <h5 class="">豆瓣评分由高到低</h5>
+                <ul class="">
+                  <li>天龙八部</li>
+                  <li>笑傲江湖（并列）<br>鹿鼎记（并列）<br>射雕英雄传（并列）</li>
+                  <li>神雕侠侣</li>
+                  <li>倚天屠龙记</li>
+                  <li>连城诀</li>
+                  <li>雪山飞狐</li>
+                  <li>飞狐外传（并列）<br>侠客行（并列）</li>
+                  <li>白马啸西风<br></li>
+                  <li>书剑恩仇录（并列）<br>碧血剑（并列）</li>
+                  <li>鸳鸯刀</li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"> </script>
+                <script style=""> var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['雪山飞狐','天龙八部','倚天屠龙记', '侠客行','射雕英雄传', '鹿鼎记', '神雕侠侣', '鸳鸯刀', '白马啸西风', '笑傲江湖','越女剑','书剑恩仇录','碧血剑','飞狐外传','连城诀'],
+        datasets: [{
+            label: '小说字数（单位：十万字）',
+            borderColor: 'rgb(75, 182, 236)',
+            data: [2.7,13.6,11.7,5.9,10.1, 16, 11.8, 3.7, 7.8, 11.9,1.9,6.3,6.5,5.6,3]
+        }]
+},
+    options: {}
+});
+              
+              </script>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mt-5">
+          <h3 class="pb-4 text-right text-primary">Part 2</h3>
+        </div>
+        <div class="col-md-6 mt-5">
+          <h3 class="pb-4 text-dark text-left">作品详情</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-monospace text-center text-dark" style="">下拉菜单-按豆瓣评分和小说字数分类查看<br>点击卡片-获得小说具体信息</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <br><br>
+          <br><br>
+          <div>
+            <form>
+              <select id="selecter" class="form-control" onchange="table();">
+                <option value="" selected="" disabled="">请选择分类方式。</option>
+                <option value="0">按字数分类</option>
+                <option value="1">按评价分类</option>
+                <option value="2">查看全部</option>
+              </select>
+            </form>
+            <br><br>
+            <div id="table">
+              <iframe id="iframe" class="airtable-embed" src="https://airtable.com/embed/shrlCcbvmhwxzFTGm?backgroundColor=cyan&amp;viewControls=on" frameborder="0" onmousewheel="" width="100%" height="1000" style="background: transparent; border: 1px solid #ccc;"></iframe>
+            </div>
+            <br>
+            <script style=""> function table(){
+    var selecter = parent.document.getElementById("selecter");
+                                if (selecter.value=="0"){document.getElementById("iframe").src="https://airtable.com/embed/shr5fu1HyQQubcSrV?backgroundColor=cyan&viewControls=on"};
+                                if (selecter.value=="1"){document.getElementById("iframe").src="https://airtable.com/embed/shrESvxZRZ6EzxgX8?backgroundColor=cyan&viewControls=on"};
+          if (selecter.value=="2"){document.getElementById("iframe").src="https://airtable.com/embed/shrlCcbvmhwxzFTGm?backgroundColor=cyan&viewControls=on"};
+                               }
+
+  </script>
+          </div>
+          <br><br><br>
+          <!-- Masthead-->
+          <!-- About-->
+          <!-- Projects-->
+          <!-- Signup-->
+          <!-- Contact-->
+          <!-- Footer-->
+          <!-- Bootstrap core JS-->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" style=""></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" style=""></script>
+          <!-- Third party plugin JS-->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" style=""></script>
+          <!-- Core theme JS-->
+          <script src="js/scripts.js" style=""></script>
+          <pingendo onclick="window.open('https://pingendo.com/', '_blank')" style="cursor:pointer;position: fixed;bottom: 20px;right:20px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:220px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">Made with Pingendo Free&nbsp;&nbsp;<img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block" alt="Pingendo logo" height="16"></pingendo>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="signup-section" id="signup">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-lg-8 mx-auto text-center">
+          <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
+          <h2 class="text-white mb-5">Subscribe to receive updates!</h2>
+          <form class="form-inline d-flex">
+            <input class="form-control flex-fill mr-0 mr-sm-2 mb-3 mb-sm-0" id="inputEmail" type="email" placeholder="Enter email address...">
+            <button class="btn btn-primary mx-auto" type="submit">Subscribe</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer bg-black small text-center text-white-50">
+    <div class="container">Copyright © Your Website 2020</div>
+  </footer>
+</body>
+
+</html>
